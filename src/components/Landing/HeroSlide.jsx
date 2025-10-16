@@ -1,50 +1,149 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { slides } from "../../data/slides";
 import { TiArrowDownThick } from "react-icons/ti";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Variants
 const textVariant = {
-  initial: { opacity: 0, x: -20 },
+  initial: (direction) => ({
+    opacity: 0,
+    x: direction === "left" ? -20 : 20,
+  }),
   animate: {
     opacity: 1,
     x: 0,
     transition: { duration: 0.6, ease: "easeOut" },
   },
-  exit: { opacity: 0, x: 20, transition: { duration: 0.4 } },
+  exit: (direction) => ({
+    opacity: 0,
+    x: direction === "left" ? 20 : -20,
+    transition: { duration: 0.4 },
+  }),
 };
 
+// Center image fade + rotation
 const imgVariant = {
-  initial: { opacity: 0, scale: 0.8, y: 20 },
+  initial: (direction) => ({
+    opacity: 0,
+    scale: 0.7,
+    rotate: direction === "left" ? -45 : 45,
+  }),
   animate: {
     opacity: 1,
     scale: 1,
+    rotate: 0,
+    transition: { duration: 0.5, ease: "easeInOut" },
+  },
+  exit: (direction) => ({
+    opacity: 0,
+    scale: 0.6,
+    rotate: direction === "left" ? 45 : -45,
+    transition: { duration: 0.4 },
+  }),
+};
+
+// Orbit Dishes
+const orbitVariant1 = {
+  initial: (direction) => ({
+    opacity: 0,
+    scale: 0.8,
+    x: direction === "left" ? 60 : -60,
+    y: direction === "left" ? 20 : -20,
+    rotate: direction === "left" ? 45 : -45,
+  }),
+  animate: {
+    opacity: 1,
+    scale: 1,
+    x: 0,
     y: 0,
-    transition: { duration: 0.7, ease: "easeOut" },
+    rotate: 0,
+    transition: { duration: 0.6, ease: "easeInOut" },
   },
-  exit: { opacity: 0, scale: 0.9, y: -20, transition: { duration: 0.4 } },
+  exit: (direction) => ({
+    opacity: 0,
+    scale: 0.8,
+    x: direction === "left" ? -60 : 60,
+    y: direction === "left" ? 20 : -20,
+    rotate: direction === "left" ? 45 : -45,
+    transition: { duration: 0.5, ease: "easeInOut" },
+  }),
 };
 
-const orbitVariant = {
-  initial: { opacity: 0, rotate: 0, scale: 0.9 },
+const orbitVariant2 = {
+  initial: (direction) => ({
+    opacity: 0,
+    scale: 0.8,
+    x: direction === "left" ? 50 : -50,
+    y: direction === "left" ? -40 : 40,
+    rotate: direction === "left" ? 45 : -45,
+  }),
   animate: {
     opacity: 1,
-    rotate: 360,
     scale: 1,
-    transition: { duration: 1.2, ease: "easeInOut" },
+    x: 0,
+    y: 0,
+    rotate: 0,
+    transition: { duration: 0.6, ease: "easeInOut" },
   },
-  exit: { opacity: 0, rotate: 0, transition: { duration: 0.4 } },
+  exit: (direction) => ({
+    opacity: 0,
+    scale: 0.8,
+    x: direction === "left" ? -40 : 40,
+    y: direction === "left" ? 50 : -50,
+    rotate: direction === "left" ? 45 : -45,
+    transition: { duration: 0.5, ease: "easeInOut" },
+  }),
 };
 
-export default function TestMotion() {
+const orbitVariant3 = {
+  initial: (direction) => ({
+    opacity: 0,
+    scale: 0.8,
+    x: direction === "left" ? 40 : -40,
+    y: direction === "left" ? 50 : -50,
+    rotate: direction === "left" ? 45 : -45,
+  }),
+  animate: {
+    opacity: 1,
+    scale: 1,
+    x: 0,
+    y: 0,
+    rotate: 0,
+    transition: { duration: 0.6, ease: "easeInOut" },
+  },
+  exit: (direction) => ({
+    opacity: 0,
+    scale: 0.8,
+    x: direction === "left" ? -50 : 50,
+    y: direction === "left" ? -40 : 40,
+    rotate: direction === "left" ? 45 : -45,
+    transition: { duration: 0.5, ease: "easeInOut" },
+  }),
+};
+
+export default function HeroSlide() {
   const [prev, setPrev] = useState(0);
+  const [direction, setDirection] = useState("left"); // ← Track direction
   const currentSlide = slides[prev];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      console.log("direction : ", direction)
+      if (direction == "left") {
+        setPrev((prev) => (prev + 1) % slides.length);
+      }
+      if (direction == "right") {
+        setPrev((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
+      }
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [slides.length, direction]);
 
   return (
     <div className="relative h-screen overflow-hidden z-0 bg-amber-50 font-sans">
       {/* Background Circle */}
       <div
-        className={`hidden sm:block absolute right-40 top-0 h-[1600px] w-[1600px] ${currentSlide?.bg} rounded-full translate-x-1/2 -translate-y-16/24 z-1`}
+        className={` absolute right-40 top-0 h-[1600px] w-[1600px] ${currentSlide?.bg} rounded-full translate-x-1/2 -translate-y-16/24 z-1`}
       ></div>
 
       <div className="relative z-10 flex flex-col h-full">
@@ -68,10 +167,11 @@ export default function TestMotion() {
         {/* Main Section */}
         <div className="flex flex-col-reverse md:flex-row justify-between items-center flex-1 px-6 md:px-12 pb-10 pt-10 gap-8">
           {/* LEFT TEXT SECTION */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" custom={direction}>
             <motion.div
               key={`text-${currentSlide?.id}`}
               variants={textVariant}
+              custom={direction}
               initial="initial"
               animate="animate"
               exit="exit"
@@ -99,70 +199,90 @@ export default function TestMotion() {
 
           {/* RIGHT IMAGE SECTION */}
           <div className="flex flex-col justify-center items-center w-full relative">
-            {/* Top orbit image */}
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={`orbit-top-${currentSlide?.id}`}
-                variants={imgVariant}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                src={currentSlide?.orbitImgs[1]}
-                className="w-20 md:w-28 h-20 md:h-28 object-cover rounded-full mb-4"
-                alt="Orbit Dish Top"
-              />
-            </AnimatePresence>
+            {/* Top small dish */}
+            <div className="flex justify-center items-center mb-4">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.img
+                  key={`orbit1-${currentSlide.id}`}
+                  src={currentSlide.orbitImgs[1]}
+                  alt="Orbit Dish Top"
+                  className="w-20 md:w-28 h-20 md:h-28 object-cover rounded-full"
+                  variants={orbitVariant1}
+                  custom={direction}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                />
+              </AnimatePresence>
+            </div>
 
-            {/* Orbit Row */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={`orbit-${currentSlide?.id}`}
-                variants={orbitVariant}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                className="flex justify-center gap-28 md:gap-60 items-center -mt-4"
-              >
-                <img
-                  src={currentSlide?.orbitImgs[0]}
+            {/* Side small dishes */}
+            <div className="flex justify-center gap-48 md:gap-72 items-center -mt-8">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.img
+                  key={`orbit2-${currentSlide.id}`}
+                  src={currentSlide.orbitImgs[0]}
                   className="w-20 md:w-28 h-20 md:h-28 rounded-full"
                   alt="Orbit Dish Left"
+                  variants={orbitVariant2}
+                  custom={direction}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
                 />
-                <img
-                  src={currentSlide?.orbitImgs[2]}
+              </AnimatePresence>
+
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.img
+                  key={`orbit3-${currentSlide.id}`}
+                  src={currentSlide.orbitImgs[2]}
                   className="w-20 md:w-28 h-20 md:h-28 rounded-full"
                   alt="Orbit Dish Right"
+                  variants={orbitVariant3}
+                  custom={direction}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
                 />
-              </motion.div>
-            </AnimatePresence>
+              </AnimatePresence>
+            </div>
 
-            {/* Center main image */}
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={`center-${currentSlide?.id}`}
-                variants={imgVariant}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                src={currentSlide?.centerImg}
-                className="w-40 md:w-60 h-40 md:h-60 rounded-full object-cover mt-6 md:mt-10"
-                alt="Center Dish"
-              />
-            </AnimatePresence>
+            {/* Center main dish */}
+            <div className="flex justify-center items-center mt-6 md:mt-10">
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.img
+                  key={`center-${currentSlide.id}`}
+                  src={currentSlide.centerImg}
+                  className="w-40 md:w-60 h-40 md:h-60 rounded-full object-cover"
+                  alt="Center Dish"
+                  variants={imgVariant}
+                  custom={direction}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                />
+              </AnimatePresence>
+            </div>
 
             {/* Buttons */}
-            <div className="flex justify-center gap-48 md:gap-72 mt-0 md:-mt-2">
+            <div className="flex justify-center gap-64 md:gap-108 mt-4 md:-mt-12">
               <button
                 className={`${currentSlide?.btn} text-white px-2 py-2 text-sm md:text-base rounded-full hover:shadow-xl shadow transition font-semibold`}
-                onClick={() => setPrev((prev) => (prev + 1) % slides.length)}
+                onClick={() => {
+                  setDirection("left");
+                  setPrev((prev) => (prev + 1) % slides.length);
+                }}
               >
                 <TiArrowDownThick />
               </button>
               <button
                 className={`${currentSlide?.btn} text-white px-2 py-2 text-sm md:text-base rounded-full hover:shadow-xl shadow transition font-semibold`}
-                onClick={() =>
-                  setPrev((prev) => (prev === 0 ? slides.length - 1 : prev - 1))
-                }
+                onClick={() => {
+                  setDirection("right");
+                  setPrev((prev) =>
+                    prev === 0 ? slides.length - 1 : prev - 1
+                  );
+                }}
               >
                 <TiArrowDownThick />
               </button>
