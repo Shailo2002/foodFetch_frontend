@@ -164,7 +164,12 @@ export default function HeroSlide() {
             <span className="hover:text-orange-500 cursor-pointer">Dinner</span>
           </div>
 
-          <div className="font-semibold cursor-pointer">Cart</div>
+          <div
+            className="font-semibold hover:text-orange-500 cursor-pointer"
+            onClick={() => navigate("/signin")}
+          >
+            SignIn
+          </div>
         </nav>
 
         {/* Main Section */}

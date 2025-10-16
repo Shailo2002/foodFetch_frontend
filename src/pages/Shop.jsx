@@ -38,7 +38,7 @@ function Shop() {
         {/* Back Button */}
         <div
           className="absolute top-4 left-4 flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white rounded-full px-3 py-1.5 backdrop-blur-md cursor-pointer transition-all duration-300"
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/home")}
         >
           <IoArrowBack size={18} />
           <span className="text-sm font-medium">Back</span>
