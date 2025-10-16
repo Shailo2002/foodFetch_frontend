@@ -1,12 +1,13 @@
 import Navbar from "./Navbar";
 import CategoryCard from "./CategoryCard";
-import { categories } from "../category";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { SERVER_URL } from "../../Contant";
 import FoodCard from "./FoodCard";
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { categories } from "../data/category";
+import NewCategoryCard from "./Landing/NewCategoryCard";
 
 export default function UserDashboard() {
   const CatescrollRef = useRef();
@@ -106,7 +107,7 @@ export default function UserDashboard() {
         {/* shop categories */}
         <div className="w-full max-w-5xl relative">
           <h2 className="text-lg font-semibold mb-3 pt-6 px-10">
-            Inspiration for your first order
+            What's On Your Mind?
           </h2>
 
           {showCateLeftButton && (
@@ -120,7 +121,7 @@ export default function UserDashboard() {
 
           <div
             ref={CatescrollRef}
-            className="flex gap-4 overflow-x-auto scroll-smooth scrollbar-hide mx-8"
+            className="flex gap-4 overflow-x-auto scroll-smooth scrollbar-hide mx-8 pt-4 px-4"
           >
             {categories?.map((cate, index) => (
               <div
@@ -133,7 +134,7 @@ export default function UserDashboard() {
                   handleFilterByCategory(cate?.category);
                 }}
               >
-                <CategoryCard
+                <NewCategoryCard
                   name={cate?.category}
                   image={cate?.image}
                   selectedCategory={selectedCategory}
@@ -177,7 +178,7 @@ export default function UserDashboard() {
                 key={index}
                 onClick={() => navigate(`/shop/${shop._id}`)}
               >
-                <CategoryCard name={shop.name} image={shop.image} />
+                <NewCategoryCard name={shop.name} image={shop.image} />
               </div>
             ))}
           </div>

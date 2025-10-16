@@ -11,9 +11,11 @@ import MyOrders from "../pages/MyOrders";
 import TrackOrder from "../pages/TrackOrder";
 import Shop from "../pages/Shop";
 import Home from "../pages/Home";
+import LandigPage from "../pages/LandigPage";
 
 export const routes = [
-  { path: "/", element: <Home/>, protected: true },
+  { path: "/", element: <Home />, protected: true },
+  { path: "/landing", element: <LandigPage />, protected: true },
   { path: "/signin", element: <SignIn />, protected: false },
   { path: "/signup", element: <SignUp />, protected: false },
   { path: "/forgot-password", element: <ForgotPassword />, protected: false },
