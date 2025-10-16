@@ -38,8 +38,8 @@ function FoodCard({ data }) {
         delay: 0.1,
       }}
       viewport={{
-        once: true, // animate only once per card
-        amount: 0.1, // start animation when 30% of card is visible
+        once: true,
+        amount: 0.1, 
       }}
       className="border-2 border-[#9e4816] rounded-xl shadow-xl shadow-gray-200 hover:shadow-lg transition-shadow duration-300"
     >
