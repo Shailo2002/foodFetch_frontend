@@ -13,6 +13,7 @@ export const slides = [
     priceColor: "text-orange-500",
     bg: "bg-orange-100",
     btn: "bg-orange-500",
+    btnHover: "bg-orange-600",
     centerImg: image2,
     orbitImgs: [image1, image2, image3],
     description:
@@ -23,10 +24,12 @@ export const slides = [
     title: "Asian Cucumber Salad",
     price: "$35",
     priceColor: "text-green-500",
-    bg: "bg-green-100",
+    bg: "bg-green-200",
     btn: "bg-green-500",
+    btnHover: "bg-green-700",
     centerImg: image3,
     orbitImgs: [image2, image3, image4],
-    description: "It is a vegetarian salad made with crunchy cucumbers, onions, sesame, and a light soy-sesame dressing for a fresh, tangy flavor.",
+    description:
+      "It is a vegetarian salad made with crunchy cucumbers, onions, sesame, and a light soy-sesame dressing for a fresh, tangy flavor.",
   },
 ];
